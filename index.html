@@ -1,5 +1,6 @@
 <html><head><base href="https://raw.githubusercontent.com/" />
 <meta charset="UTF-8">
+<!-- Previous CSS styles remain the same -->
 <style>
 :root {
     --main-green: #00ff9d;
@@ -16,50 +17,6 @@ body {
     padding: 20px;
     line-height: 1.6;
 }
-
-.ascii-art {
-    color: var(--main-green);
-    white-space: pre;
-    font-family: monospace;
-    text-align: center;
-    margin-bottom: 20px;
-    overflow: hidden;
-    height: 0;
-    animation: slideDown 1s forwards;
-}
-
-@keyframes slideDown {
-    from {
-        height: 0;
-    }
-    to {
-        height: 180px;
-    }
-}
-
-@keyframes typewriter {
-    from {
-        width: 0;
-    }
-    to {
-        width: 100%;
-    }
-}
-
-.ascii-line {
-    display: inline-block;
-    overflow: hidden;
-    white-space: nowrap;
-    animation: typewriter 2s steps(60, end) forwards;
-    margin: 0;
-    opacity: 0;
-}
-
-.delay-1 { animation-delay: 0.5s; animation-fill-mode: forwards; }
-.delay-2 { animation-delay: 1s; animation-fill-mode: forwards; }
-.delay-3 { animation-delay: 1.5s; animation-fill-mode: forwards; }
-.delay-4 { animation-delay: 2s; animation-fill-mode: forwards; }
-.delay-5 { animation-delay: 2.5s; animation-fill-mode: forwards; }
 
 .container {
     max-width: 1200px;
@@ -185,15 +142,6 @@ footer {
 </head>
 <body>
 <div class="container">
-    <div class="ascii-art">
-        <p class="ascii-line delay-1">     ____                    _      ____  _           _            </p>
-        <p class="ascii-line delay-2">    / ___| ___   ___   __ _| | ___|  _ \(_)_ __ __ _| |_ ___     </p>
-        <p class="ascii-line delay-3">   | |  _ / _ \ / _ \ / _` | |/ _ \ |_) | | '__/ _` | __/ _ \    </p>
-        <p class="ascii-line delay-4">   | |_| | (_) | (_) | (_| | |  __/  __/| | | | (_| | ||  __/    </p>
-        <p class="ascii-line delay-5">    \____|\___/ \___/ \__, |_|\___|_|   |_|_|  \__,_|\__\___|    </p>
-        <p class="ascii-line delay-5">                      |___/                                        </p>
-    </div>
-
     <div class="progress-section">
         <div class="progress-container">
             <div class="progress-tracker">
@@ -261,9 +209,60 @@ footer {
 
 <script>
 const accounts = [
-    {group: 1, id: 'KZ1', google: false, ads: false},
+    // Group 1
+    {group: 1, id: 'KZ1', google: true, ads: true},
     {group: 1, id: 'DK2', google: false, ads: false},
-    // ... Add all accounts here
+    {group: 1, id: 'CA3', google: false, ads: false},
+    {group: 1, id: 'NL4', google: false, ads: false},
+    {group: 1, id: 'RS5', google: false, ads: false},
+    // Group 2
+    {group: 2, id: 'LT6', google: false, ads: false},
+    {group: 2, id: 'AU7', google: false, ads: false},
+    {group: 2, id: 'CA8', google: false, ads: false},
+    {group: 2, id: 'BY9', google: true, ads: true},
+    {group: 2, id: 'AU10', google: true, ads: true},
+    // Group 3
+    {group: 3, id: 'IT11', google: false, ads: false},
+    {group: 3, id: 'EE12', google: false, ads: false},
+    {group: 3, id: 'AM13', google: true, ads: true},
+    {group: 3, id: 'NO14', google: false, ads: false},
+    {group: 3, id: 'SL15', google: false, ads: false},
+    // Group 4
+    {group: 4, id: 'RO16', google: true, ads: true},
+    {group: 4, id: 'BE17', google: true, ads: true},
+    {group: 4, id: 'UZ18', google: false, ads: false},
+    {group: 4, id: 'NO19', google: false, ads: false},
+    {group: 4, id: 'RO20', google: false, ads: false},
+    // Group 5
+    {group: 5, id: 'SL21', google: false, ads: false},
+    {group: 5, id: 'EE22', google: false, ads: false},
+    {group: 5, id: 'UA23', google: false, ads: false},
+    {group: 5, id: 'AM24', google: true, ads: true},
+    {group: 5, id: 'UZ25', google: true, ads: true},
+    // Group 6
+    {group: 6, id: 'MX26', google: false, ads: false},
+    {group: 6, id: 'DE27', google: true, ads: true},
+    {group: 6, id: 'FL28', google: false, ads: false},
+    {group: 6, id: 'SK29', google: true, ads: true},
+    {group: 6, id: 'ES30', google: false, ads: false},
+    // Group 7
+    {group: 7, id: 'TJ31', google: true, ads: true},
+    {group: 7, id: 'LT32', google: true, ads: true},
+    {group: 7, id: 'SK33', google: false, ads: false},
+    {group: 7, id: 'GR34', google: true, ads: true},
+    {group: 7, id: 'IN35', google: false, ads: false},
+    // Group 8
+    {group: 8, id: 'UK36', google: false, ads: false},
+    {group: 8, id: 'UK37', google: false, ads: false},
+    {group: 8, id: 'GR38', google: false, ads: false},
+    {group: 8, id: 'MD39', google: false, ads: false},
+    {group: 8, id: 'LV40', google: false, ads: false},
+    // Group 9
+    {group: 9, id: 'CA41', google: false, ads: false},
+    {group: 9, id: 'FR42', google: false, ads: false},
+    {group: 9, id: 'IT43', google: false, ads: false},
+    {group: 9, id: 'NL44', google: false, ads: false},
+    {group: 9, id: 'IT45', google: false, ads: false}
 ];
 
 let isEditMode = false;
@@ -285,10 +284,12 @@ function renderAccountsTable() {
     const tbody = document.querySelector('#accountsTable tbody');
     tbody.innerHTML = '';
     
+    let currentGroup = null;
+    
     accounts.forEach(account => {
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>Group ${account.group}</td>
+            <td>${currentGroup !== account.group ? `Group ${account.group}` : ''}</td>
             <td>${account.id}</td>
             <td class="checkbox-cell">
                 <input type="checkbox" ${account.google ? 'checked' : ''} 
@@ -302,6 +303,7 @@ function renderAccountsTable() {
             </td>
         `;
         tbody.appendChild(row);
+        currentGroup = account.group;
     });
 }
 
@@ -342,4 +344,5 @@ document.addEventListener('DOMContentLoaded', () => {
     updateProgress('ads');
 });
 </script>
-</body></html>
+</body>
+</html>
