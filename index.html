@@ -139,15 +139,27 @@ body {
     margin: 20px 0;
 }
 
-.log-textarea {
+.log-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.log-header h3 {
+    margin: 0;
+}
+
+.log-section textarea {
     width: 100%;
-    height: 150px;
-    background: rgba(0,20,0,0.2);
-    border: 1px solid var(--dim-green);
-    color: var(--text-gray);
     padding: 10px;
+    margin-bottom: 10px;
+    background: black;
+    border: 1px solid var(--dim-green);
+    color: var(--main-green);
     font-family: 'Courier New', monospace;
-    resize: vertical;
+    resize: vertical; /* Allow vertical resizing */
+    box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */
 }
 
 .edit-button {
@@ -198,7 +210,25 @@ footer {
                 <h2>Google Accounts <span class="cursor"></span></h2>
                 <div id="google-count">0/45 accounts complete</div>
                 <div class="progress-bar">
-                    <div class="progress-fill" id="googleProgressFill"></div>
+                    <div class="progress-fill" id="googleProgressFill"></div><div class="schedule">
+    <h3>Daily Rotation Schedule</h3>
+    <table class="accounts-table">
+        <tr>
+            <th>Day</th>
+            <th>(7-11)</th>
+            <th>(12-16)</th>
+            <th>(17-21)</th>
+        </tr>
+        <tr><td>Extra Sun 1</td><td>G1,2</td><td>G3,4</td><td>G5,6</td></tr>
+        <tr><td>Mon</td><td>G3,6</td><td>G7,9</td><td>G1,4</td></tr>
+        <tr><td>Tue</td><td>G2,5</td><td>G8,1</td><td>G4,7</td></tr>
+        <tr><td>Wed</td><td>G6,9</td><td>G3,8</td><td>G2,5</td></tr>
+        <tr><td>Thu</td><td>G1,7</td><td>G4,6</td><td>G9,3</td></tr>
+        <tr><td>Fri</td><td>G5,8</td><td>G2,9</td><td>G3,7</td></tr>
+        <tr><td>Sat</td><td>G4,1</td><td>G6,3</td><td>G8,2</td></tr>
+        <tr><td>Sun</td><td>G7,5</td><td>G9,4</td><td>G1,6</td></tr>
+    </table>
+</div>
                 </div>
                 <div class="terminal-output" id="googleTerminalOutput"></div>
             </div>
@@ -214,14 +244,14 @@ footer {
     </div>
 
 
-<div class="schedule">
+   <div class="schedule">
     <h3>Daily Rotation Schedule</h3>
     <table class="accounts-table">
         <tr>
             <th>Day</th>
             <th>(9-11)</th>
             <th>(12-16)</th>
-            <th>(17-20)</th>
+            <th>(17-19)</th>
          </tr>
         <tr><td>Sun</td><td>G4,7</td><td>G2,6</td><td>G9,3</td></tr>
         <tr><td>Mon</td><td>G1,5</td><td>G8,4</td><td>G6,2</td></tr>
@@ -232,14 +262,26 @@ footer {
         <tr><td>Sat</td><td>G2,6</td><td>G1,4</td><td>G8,9</td></tr>
         <tr><td>Sun</td><td>G3,7</td><td>G5,8</td><td>G4,1</td></tr>
     </table>
-</div>
+   </div>
 
-  <div class="log-section">
-    <h3>.log</h3>
-    <h2>Random G-queries</h2>
+ <h2>Random G-queries</h2>
     <button class="edit-button" onclick="showRandomQuery()">Generate Random Query</button>
     <p id="randomQueryDisplay"></p>
+    
+
+<div class="log-section">
+    <div class="log-header">
+        <h3>.log</h3>
+        <button class="save-button" id="saveLogButton" onclick="saveLog()">Save Log</button>
+    </div>
+    <textarea id="logTextarea" placeholder="Enter log text here" rows="4"></textarea>
+    <span class="status-message" id="logStatusMessage"></span>
 </div>
+
+
+
+
+
 
  <table class="accounts-table" id="accountsTable">
         <thead>
@@ -515,211 +557,63 @@ function simulateTerminalOutput(id, type, completed) {
     terminal.scrollTop = terminal.scrollHeight;
 }
 
+
+
+
+
+
+function adjustTextareaHeight() {
+    const logTextarea = document.getElementById('logTextarea');
+    logTextarea.style.height = 'auto'; // Reset the height to auto to get the correct scrollHeight
+    logTextarea.style.height = `${logTextarea.scrollHeight}px`; // Set the height to match the scrollHeight
+}
+
+function saveLog() {
+    const logTextarea = document.getElementById('logTextarea');
+    const logText = logTextarea.value.trim();
+
+    if (logText) {
+        localStorage.setItem('logText', logText);
+        showLogStatusMessage('Log saved successfully!', 'success');
+    } else {
+        showLogStatusMessage('Log text cannot be empty!', 'error');
+    }
+}
+
+function showLogStatusMessage(message, type = 'success') {
+    const logStatusMessage = document.getElementById('logStatusMessage');
+    logStatusMessage.textContent = message;
+    logStatusMessage.className = `status-message ${type} show`;
+    setTimeout(() => {
+        logStatusMessage.classList.remove('show');
+    }, 2000);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Load the saved log text if available
+    const savedLogText = localStorage.getItem('logText');
+    if (savedLogText) {
+        const logTextarea = document.getElementById('logTextarea');
+        logTextarea.value = savedLogText;
+        adjustTextareaHeight(); // Adjust the height after setting the value
+    }
+
+    // Add event listener to adjust height on input
+    const logTextarea = document.getElementById('logTextarea');
+    logTextarea.addEventListener('input', adjustTextareaHeight);
+});
+
+
+
+
+
+
+
 // Random query functions
 const queries = [
-    "buy shoes online",
-        "weather forecast",
-        "best pizza near me",
-        "how to fix a bike",
-        "recipe for lasagna",
-        "download free e-books",
-        "top programming languages 2024",
-        "funny cat videos",
-        "how to learn guitar",
-        "cheap flight tickets",
-        "latest tech news",
-        "create a Gmail account",
-        "fitness tips for beginners",
-        "famous tourist destinations",
-        "how to write a resume",
-        "convert PDF to Word",
-        "quick math tricks",
-        "how to meditate",
-        "car rental services",
-        "online learning platforms",
-          "how to make pasta",
-    "weather today",
-    "download free movies",
-    "best restaurants near me",
-    "buy iPhone online",
-    "gogle translate", // typo
-    "YouTube trending videos",
-    "news updates",
-    "fitness tips for beginners",
-    "how to plant tomatoes",
-    "current gold price",
-    "cheap flight tickets",
-    "local coffee shops",
-    "funny cat videos",
-    "web development tutorials",
-    "convert USD to EUR",
-    "how to cook steak",
-    "gogle docs", // typo
-    "latest fashion trends",
-    "how to meditate",
-    "DIY home improvement",
-    "best laptops for students",
-    "how to lose weight fast",
-    "coding challenges for Python",
-    "world cup schedule",
-    "movie reviews this week",
-    "how to start a blog",
-    "affordable car insurance",
-    "where to buy Bitcoin",
-    "online shopping deals",
-    "sports news today",
-    "best skincare routine",
-    "anime streaming sites",
-    "learn Spanish online",
-    "kids learning games",
-    "healthy dinner recipes",
-    "cheap hotels in Paris",
-    "SEO tips for beginners",
-    "google maps directions", // typo-free
-    "how to tie a tie",
-    "public speaking tips",
-    "cryptocurrency news",
-    "how to write a resume",
-    "recipe for pancakes",
-    "career growth tips",
-    "best books of 2024",
-    "what is quantum physics",
-    "famous landmarks in Italy",
-    "dog training techniques",
-    "baby care tips",
-    "how to draw anime characters",
-    "makeup tutorials",
-    "jobs hiring near me",
-    "popular TV shows",
-    "trending tech gadgets",
-    "virtual reality games",
-    "yoga for stress relief",
-    "what is artificial intelligence",
-    "music theory basics",
-    "gaming laptops under $1000",
-    "Google drive storage plans", // typo-free
-    "mental health resources",
-    "best hiking trails",
-    "how to start freelancing",
-    "cheap car rentals",
-    "coding bootcamps near me",
-    "online MBA programs",
-    "how to file taxes",
-    "top tourist spots in Japan",
-    "interior design ideas",
-    "what is the metaverse",
-    "wht is blockhain", // typo
-    "how to make sushi",
-    "latest Marvel movies",
-    "budget travel tips",
-    "parenting advice",
-    "how to play guitar chords",
-    "famous artists of all time",
-    "recipe for chocolate cake",
-    "google playstore download", // typo-free
-    "how to clean sneakers",
-    "digital marketing strategies",
-    "how to save money fast",
-    "solar panel installation cost",
-    "ways to improve memory",
-    "car repair near me",
-    "how to code in Java",
-    "how to bake cookies",
-    "how to make a website",
-    "weight training for beginners",
-    "how to learn to swim",
-    "creative writing prompts",
-    "freelancing platforms",
-    "start an online business",
-    "online course platforms",
-    "how to make friends",
-    "dog breeds and characteristics",
-    "how to invest in stocks",
-    "famous inventors and inventions",
-    "best video editing software",
-    "latest gaming consoles",
-    "virtual fitness classes",
-    "AI tools for productivity",
-    "how to learn to dance",
-    "popular coffee recipes",
-    "travel bucket list",
-    "history of the internet",
-    "new tesla car features",
-    "eco-friendly living tips",
-    "how to recycle properly",
-    "beginner piano songs",
-    "learn programming for kids",
-    "social media marketing",
-    "best online games 2024",
-    "how to edit photos",
-    "top universities in the world",
-    "how to clean your phone screen",
-    "how to adopt a cat",
-    "camping tips for beginners",
-    "how to play chess",
-    "recipes for vegetarians",
-    "gogle chrome extensions", // typo
-    "what is a black hole",
-    "homeschooling resources",
-    "why is the sky blue",
-    "how to start a podcast",
-    "what are NFTs",
-    "online fitness trackers",
-    "what is climate change",
-    "how to reduce stress",
-    "healthy breakfast recipes",
-    "ways to earn passive income",
-    "home organization ideas",
-    "famous books of 2024",
-    "cheap vacation packages",
-    "trending YouTube creators",
-    "Google sheet tutorials", // typo-free
-    "home remedies for cold",
-    "when is the next solar eclipse",
-    "how to build a PC",
-    "how to buy stocks",
-    "importance of sleep",
-    "best horror movies",
-    "famous world leaders",
-    "how to fix WiFi issues",
-    "best Android apps",
-    "what is cryptocurrency mining",
-    "how to start coding",
-    "find local farmers markets",
-    "how to make slime",
-    "budget-friendly wedding tips",
-    "best skincare products",
-    "how to be more productive",
-    "how to study effectively",
-    "quick workout routines",
-    "recipe for apple pie",
-    "famous philosophers",
-    "types of renewable energy",
-    "google meet login", // typo-free
-    "what is a meme",
-    "importance of exercise",
-    "how to draw portraits",
-    "cheap weekend getaways",
-    "top-rated headphones",
-    "DIY crafts for kids",
-    "virtual museum tours",
-    "how to care for houseplants",
-    "ways to improve communication skills",
-    "popular social media platforms",
-    "how to bake bread",
-    "coding projects for beginners",
-    "home workout equipment",
-    "how to study math",
-    "google earth 3d view", // typo-free
-    "recipe for banana bread",
-    "affordable online colleges",
-    "how to learn history",
-    "easy dinner recipes",
-    "how to learn guitar online",
-    "online learning benefits",
-    "famous historical events",
-    "best car brands of 2024",
-    "importance of mental health"
+    "importance of mental health",
+    "how to make good coffee at home",
+    "latest Marvel movies"
 ];
 
 function addTypos(query) {
