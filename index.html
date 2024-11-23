@@ -437,15 +437,78 @@ let isEditMode = false;
 let hasUnsavedChanges = false;
 const EDIT_CODE = 'abc123';
 
+
+
+
+
+
+
+
+
+
 // Animation functions
 let currentFrame = 0;
+const totalFrames = 30;
+const interpolatedFrames = [];
+
+// Interpolate between frames to create 30 frames
+for (let i = 0; i < frames.length - 1; i++) {
+    const frame1 = frames[i];
+    const frame2 = frames[i + 1];
+
+    for (let j = 0; j < totalFrames / (frames.length - 1); j++) {
+        const t = j / (totalFrames / (frames.length - 1));
+        const interpolatedFrame = interpolateFrames(frame1, frame2, t);
+        interpolatedFrames.push(interpolatedFrame);
+    }
+}
+
+function interpolateFrames(frame1, frame2, t) {
+    const lines1 = frame1.split('\n');
+    const lines2 = frame2.split('\n');
+
+    const interpolatedLines = lines1.map((line1, index) => {
+        const line2 = lines2[index];
+        return line1.split('').map((char1, charIndex) => {
+            const char2 = line2[charIndex];
+            return char1 === char2 ? char1 : (Math.random() < t ? char2 : char1);
+        }).join('');
+    });
+
+    return interpolatedLines.join('\n');
+}
+
+let frameCounter = 0;
+const delayFactor = 180; // Adjust this value to control the speed (higher value = slower animation)
+
 function updateAnimation() {
     const animationElement = document.getElementById('asciiAnimation');
     if (animationElement) {
-        animationElement.textContent = frames[currentFrame];
-        currentFrame = (currentFrame + 1) % frames.length;
+        if (frameCounter % delayFactor === 0) {
+            animationElement.textContent = interpolatedFrames[currentFrame];
+            currentFrame = (currentFrame + 1) % interpolatedFrames.length;
+        }
+        frameCounter++;
     }
+    requestAnimationFrame(updateAnimation);
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    updateAnimation();
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Local storage functions
 function loadAccounts() {
