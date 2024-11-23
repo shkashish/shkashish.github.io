@@ -212,10 +212,12 @@ footer {
         </table>
     </div>
 
-    <div class="log-section">
-        <h3>.log</h3>
-        <textarea class="log-textarea" id="logArea" disabled></textarea>
-    </div>
+  <div class="log-section">
+    <h3>.log</h3>
+    <h2>Random G-queries</h2>
+    <button class="edit-button" onclick="showRandomQuery()">Generate Random Query</button>
+    <p id="randomQueryDisplay"></p>
+</div>
 
     <footer>
         <button class="edit-button" id="editButton">Edit Mode</button>
@@ -223,7 +225,242 @@ footer {
     </footer>
 </div>
 
+<scipt>
 
+    <script>
+    // Array of potential Google queries
+    const queries = [
+        "buy shoes online",
+        "weather forecast",
+        "best pizza near me",
+        "how to fix a bike",
+        "recipe for lasagna",
+        "download free e-books",
+        "top programming languages 2024",
+        "funny cat videos",
+        "how to learn guitar",
+        "cheap flight tickets",
+        "latest tech news",
+        "create a Gmail account",
+        "fitness tips for beginners",
+        "famous tourist destinations",
+        "how to write a resume",
+        "convert PDF to Word",
+        "quick math tricks",
+        "how to meditate",
+        "car rental services",
+        "online learning platforms",
+          "how to make pasta",
+    "weather today",
+    "download free movies",
+    "best restaurants near me",
+    "buy iPhone online",
+    "gogle translate", // typo
+    "YouTube trending videos",
+    "news updates",
+    "fitness tips for beginners",
+    "how to plant tomatoes",
+    "current gold price",
+    "cheap flight tickets",
+    "local coffee shops",
+    "funny cat videos",
+    "web development tutorials",
+    "convert USD to EUR",
+    "how to cook steak",
+    "gogle docs", // typo
+    "latest fashion trends",
+    "how to meditate",
+    "DIY home improvement",
+    "best laptops for students",
+    "how to lose weight fast",
+    "coding challenges for Python",
+    "world cup schedule",
+    "movie reviews this week",
+    "how to start a blog",
+    "affordable car insurance",
+    "where to buy Bitcoin",
+    "online shopping deals",
+    "sports news today",
+    "best skincare routine",
+    "anime streaming sites",
+    "learn Spanish online",
+    "kids learning games",
+    "healthy dinner recipes",
+    "cheap hotels in Paris",
+    "SEO tips for beginners",
+    "google maps directions", // typo-free
+    "how to tie a tie",
+    "public speaking tips",
+    "cryptocurrency news",
+    "how to write a resume",
+    "recipe for pancakes",
+    "career growth tips",
+    "best books of 2024",
+    "what is quantum physics",
+    "famous landmarks in Italy",
+    "dog training techniques",
+    "baby care tips",
+    "how to draw anime characters",
+    "makeup tutorials",
+    "jobs hiring near me",
+    "popular TV shows",
+    "trending tech gadgets",
+    "virtual reality games",
+    "yoga for stress relief",
+    "what is artificial intelligence",
+    "music theory basics",
+    "gaming laptops under $1000",
+    "Google drive storage plans", // typo-free
+    "mental health resources",
+    "best hiking trails",
+    "how to start freelancing",
+    "cheap car rentals",
+    "coding bootcamps near me",
+    "online MBA programs",
+    "how to file taxes",
+    "top tourist spots in Japan",
+    "interior design ideas",
+    "what is the metaverse",
+    "wht is blockhain", // typo
+    "how to make sushi",
+    "latest Marvel movies",
+    "budget travel tips",
+    "parenting advice",
+    "how to play guitar chords",
+    "famous artists of all time",
+    "recipe for chocolate cake",
+    "google playstore download", // typo-free
+    "how to clean sneakers",
+    "digital marketing strategies",
+    "how to save money fast",
+    "solar panel installation cost",
+    "ways to improve memory",
+    "car repair near me",
+    "how to code in Java",
+    "how to bake cookies",
+    "how to make a website",
+    "weight training for beginners",
+    "how to learn to swim",
+    "creative writing prompts",
+    "freelancing platforms",
+    "start an online business",
+    "online course platforms",
+    "how to make friends",
+    "dog breeds and characteristics",
+    "how to invest in stocks",
+    "famous inventors and inventions",
+    "best video editing software",
+    "latest gaming consoles",
+    "virtual fitness classes",
+    "AI tools for productivity",
+    "how to learn to dance",
+    "popular coffee recipes",
+    "travel bucket list",
+    "history of the internet",
+    "new tesla car features",
+    "eco-friendly living tips",
+    "how to recycle properly",
+    "beginner piano songs",
+    "learn programming for kids",
+    "social media marketing",
+    "best online games 2024",
+    "how to edit photos",
+    "top universities in the world",
+    "how to clean your phone screen",
+    "how to adopt a cat",
+    "camping tips for beginners",
+    "how to play chess",
+    "recipes for vegetarians",
+    "gogle chrome extensions", // typo
+    "what is a black hole",
+    "homeschooling resources",
+    "why is the sky blue",
+    "how to start a podcast",
+    "what are NFTs",
+    "online fitness trackers",
+    "what is climate change",
+    "how to reduce stress",
+    "healthy breakfast recipes",
+    "ways to earn passive income",
+    "home organization ideas",
+    "famous books of 2024",
+    "cheap vacation packages",
+    "trending YouTube creators",
+    "Google sheet tutorials", // typo-free
+    "home remedies for cold",
+    "when is the next solar eclipse",
+    "how to build a PC",
+    "how to buy stocks",
+    "importance of sleep",
+    "best horror movies",
+    "famous world leaders",
+    "how to fix WiFi issues",
+    "best Android apps",
+    "what is cryptocurrency mining",
+    "how to start coding",
+    "find local farmers markets",
+    "how to make slime",
+    "budget-friendly wedding tips",
+    "best skincare products",
+    "how to be more productive",
+    "how to study effectively",
+    "quick workout routines",
+    "recipe for apple pie",
+    "famous philosophers",
+    "types of renewable energy",
+    "google meet login", // typo-free
+    "what is a meme",
+    "importance of exercise",
+    "how to draw portraits",
+    "cheap weekend getaways",
+    "top-rated headphones",
+    "DIY crafts for kids",
+    "virtual museum tours",
+    "how to care for houseplants",
+    "ways to improve communication skills",
+    "popular social media platforms",
+    "how to bake bread",
+    "coding projects for beginners",
+    "home workout equipment",
+    "how to study math",
+    "google earth 3d view", // typo-free
+    "recipe for banana bread",
+    "affordable online colleges",
+    "how to learn history",
+    "easy dinner recipes",
+    "how to learn guitar online",
+    "online learning benefits",
+    "famous historical events",
+    "best car brands of 2024",
+    "importance of mental health",
+    "how to make good coffee at home"
+    ];
+
+    // Function to add typos to queries
+    function addTypos(query) {
+        const typoProbability = 0.05; // 5%
+        if (Math.random() < typoProbability) {
+            const index = Math.floor(Math.random() * query.length);
+            return (
+                query.slice(0, index) +
+                String.fromCharCode(query.charCodeAt(index) + 1) +
+                query.slice(index + 1)
+            );
+        }
+        return query;
+    }
+
+    // Generate 200 queries with typos
+    const randomQueries = Array(200)
+        .fill(null)
+        .map(() => addTypos(queries[Math.floor(Math.random() * queries.length)]));
+
+    // Function to display a random query
+    function showRandomQuery() {
+        const randomQuery = randomQueries[Math.floor(Math.random() * randomQueries.length)];
+        document.getElementById("randomQueryDisplay").textContent = randomQuery;
+    }
+</scipt>
   <script>
         const frames = [
             `
@@ -299,6 +536,10 @@ footer {
     </script>
 
 <script>
+
+
+
+    
 const accounts = [
     // Group 1
     {group: 1, id: 'KZ1', google: true, ads: false},
