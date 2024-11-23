@@ -16,6 +16,7 @@ body {
     margin: 0;
     padding: 20px;
     line-height: 1.6;
+    position: relative;
 }
 
 
@@ -66,9 +67,11 @@ body {
         }
 
 .container {
-    max-width: 1200px;
-    margin: 0 auto;
+      width: 72%; /* Take up 72% of the page width */
+    padding-right: 20px; /* Add some padding to separate from the log section */
 }
+
+
 
 .progress-section {
     border: 1px solid var(--dim-green);
@@ -135,6 +138,16 @@ body {
     text-align: center;
 }
 
+
+.log-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 28%; /* Take up 28% of the page width */
+    margin-left: auto; /* Position the log container to the right */
+    padding-top: 111px;
+}
+
 .log-section {
     margin: 20px 0;
 }
@@ -158,18 +171,24 @@ body {
     border: 1px solid var(--dim-green);
     color: var(--main-green);
     font-family: 'Courier New', monospace;
-    resize: vertical; /* Allow vertical resizing */
+    resize: none; /* Disable manual resizing */
     box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */
+    overflow: hidden; /* Hide overflow */
+}
+
+.log-section textarea:focus {
+    overflow: auto; /* Allow scrolling when focused */
 }
 
 .edit-button {
-    background: var(--dim-green);
-    color: var(--main-green);
-    border: 1px solid var(--main-green);
-    padding: 10px 20px;
-    cursor: pointer;
-    font-family: 'Courier New', monospace;
-    transition: all 0.3s ease;
+            background: var(--dim-green);
+            color: var(--main-green);
+            border: 1px solid var(--main-green);
+            padding: 10px 20px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s ease;
+            margin-left: 10px;
 }
 
 .edit-button:hover {
@@ -201,7 +220,29 @@ footer {
 </head>
 <body>
 
+
 <div id="asciiAnimation" class="ascii-animation"></div>
+
+
+    
+
+
+<div class="log-container">
+
+
+    
+ <div class="log-section">
+    <div class="log-header">
+        <h3>.log</h3>
+        <button class="save-button" id="saveLogButton" onclick="saveLog()">Save Log
+        </button>
+    </div>
+    <textarea id="logTextarea" placeholder="Enter log text here" rows="4"></textarea>
+    <span class="status-message" id="logStatusMessage"></span>
+ </div>
+
+</div>
+
 
 <div class="container">
     <div class="progress-section">
@@ -264,19 +305,8 @@ footer {
     </table>
    </div>
 
- <h2>Random G-queries</h2>
-    <button class="edit-button" onclick="showRandomQuery()">Generate Random Query</button>
-    <p id="randomQueryDisplay"></p>
-    
+ 
 
-<div class="log-section">
-    <div class="log-header">
-        <h3>.log</h3>
-        <button class="save-button" id="saveLogButton" onclick="saveLog()">Save Log</button>
-    </div>
-    <textarea id="logTextarea" placeholder="Enter log text here" rows="4"></textarea>
-    <span class="status-message" id="logStatusMessage"></span>
-</div>
 
 
 
@@ -297,16 +327,23 @@ footer {
         </tbody>
     </table>
 
+
+
+
      <footer>
         <button class="edit-button" id="editButton">Edit Mode</button>
         <button class="save-button" id="saveButton" disabled>Save Changes</button>
         <span class="status-message" id="statusMessage">Changes saved successfully!</span>
-        <p>Шкандин Владимир</p>
+
     </footer>
+    
+    
 </div>
 
+ <div id="registrationTimes"></div>
 
-
+ <button class="edit-button" onclick="showRandomQuery()"> G-Query</button>
+    <p id="randomQueryDisplay"></p>
 
 
 
@@ -665,6 +702,124 @@ document.addEventListener('DOMContentLoaded', () => {
     const logTextarea = document.getElementById('logTextarea');
     logTextarea.addEventListener('input', adjustTextareaHeight);
 });
+
+
+
+// List of registered accounts
+const registeredAccounts = [
+    'CA3', 'CA8', 'LT6', 'NO19', 'RO20', 'EE22', 'FL28', 'LV40', 'NL4',
+    'KZ1', 'AU10', 'AM13', 'UZ25', 'BE17', 'AM24'
+];
+
+// List of all accounts
+const allAccounts = [
+    { group: 1, id: 'KZ1' },
+    { group: 1, id: 'DK2' },
+    { group: 1, id: 'CA3' },
+    { group: 1, id: 'NL4' },
+    { group: 1, id: 'RS5' },
+    { group: 2, id: 'LT6' },
+    { group: 2, id: 'AU7' },
+    { group: 2, id: 'CA8' },
+    { group: 2, id: 'BY9' },
+    { group: 2, id: 'AU10' },
+    { group: 3, id: 'IT11' },
+    { group: 3, id: 'EE12' },
+    { group: 3, id: 'AM13' },
+    { group: 3, id: 'NO14' },
+    { group: 3, id: 'SL15' },
+    { group: 4, id: 'RO16' },
+    { group: 4, id: 'BE17' },
+    { group: 4, id: 'UZ18' },
+    { group: 4, id: 'NO19' },
+    { group: 4, id: 'RO20' },
+    { group: 5, id: 'SL21' },
+    { group: 5, id: 'EE22' },
+    { group: 5, id: 'UA23' },
+    { group: 5, id: 'AM24' },
+    { group: 5, id: 'UZ25' },
+    { group: 6, id: 'MX26' },
+    { group: 6, id: 'DE27' },
+    { group: 6, id: 'FL28' },
+    { group: 6, id: 'SK29' },
+    { group: 6, id: 'ES30' },
+    { group: 7, id: 'TJ31' },
+    { group: 7, id: 'LT32' },
+    { group: 7, id: 'SK33' },
+    { group: 7, id: 'GR34' },
+    { group: 7, id: 'IN35' },
+    { group: 8, id: 'UK36' },
+    { group: 8, id: 'UK37' },
+    { group: 8, id: 'GR38' },
+    { group: 8, id: 'MD39' },
+    { group: 8, id: 'LV40' },
+    { group: 9, id: 'CA41' },
+    { group: 9, id: 'FR42' },
+    { group: 9, id: 'IT43' },
+    { group: 9, id: 'NL44' },
+    { group: 9, id: 'IT45' }
+];
+
+
+
+
+
+
+// Function to shuffle an array
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
+// Function to get random registration times
+function getRandomRegistrationTimes(accounts) {
+    const registrationTimes = [];
+    const startTime = new Date();
+    startTime.setHours(10, 0, 0, 0); // Set start time to 10:00 AM
+    const endTime = new Date();
+    endTime.setHours(18, 0, 0, 0); // Set end time to 6:00 PM
+
+    const timeRange = endTime - startTime;
+    const interval = timeRange / accounts.length;
+
+    // Shuffle the accounts array
+    shuffleArray(accounts);
+
+    // Assign times based on the shuffled order
+    accounts.forEach((account, index) => {
+        const registrationTime = new Date(startTime.getTime() + interval * index);
+        registrationTimes.push({
+            id: account.id,
+            time: registrationTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        });
+    });
+
+    return registrationTimes;
+}
+
+// Function to display registration times
+function displayRegistrationTimes() {
+    const remainingAccounts = allAccounts.filter(account => !registeredAccounts.includes(account.id));
+    const registrationTimes = getRandomRegistrationTimes(remainingAccounts);
+
+    const registrationTimesElement = document.getElementById('registrationTimes');
+    registrationTimesElement.innerHTML = '';
+
+    registrationTimes.forEach(time => {
+        const p = document.createElement('p');
+        p.textContent = `${time.id}: ${time.time}`;
+        registrationTimesElement.appendChild(p);
+    });
+}
+
+// Call the function to display registration times
+document.addEventListener('DOMContentLoaded', displayRegistrationTimes);
+
+
+
+
 
 
 
