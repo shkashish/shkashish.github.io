@@ -18,15 +18,18 @@ body {
     line-height: 1.6;
 }
     
-.ascii-animation {
+  .ascii-animation {
             font-family: monospace;
             white-space: pre;
             font-size: 12px;
             line-height: 1;
-            margin: 20px 0;
+            margin: 20px auto;  /* Changed from margin: 20px 0 */
             height: 10em;
             color: var(--main-green);
- }
+            display: flex;
+            justify-content: center;
+            text-align: center;
+        }
 
 .container {
     max-width: 1200px;
