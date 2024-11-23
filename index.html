@@ -17,6 +17,40 @@ body {
     padding: 20px;
     line-height: 1.6;
 }
+
+
+  .save-button {
+            background: var(--dim-green);
+            color: var(--main-green);
+            border: 1px solid var(--main-green);
+            padding: 10px 20px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s ease;
+            margin-left: 10px;
+        }
+
+        .save-button:hover {
+            background: var(--main-green);
+            color: var(--bg-color);
+        }
+
+        .save-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .status-message {
+            color: var(--main-green);
+            margin-left: 10px;
+            display: inline-block;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .status-message.show {
+            opacity: 1;
+        }
     
   .ascii-animation {
             font-family: monospace;
@@ -220,18 +254,269 @@ footer {
         </tbody>
     </table>
 
-    <footer>
+     <footer>
         <button class="edit-button" id="editButton">Edit Mode</button>
+        <button class="save-button" id="saveButton" disabled>Save Changes</button>
+        <span class="status-message" id="statusMessage">Changes saved successfully!</span>
         <p>Шкандин Владимир</p>
     </footer>
 </div>
 
 
 
+
+
+
 <script>
-    // Array of potential Google queries
-    const queries = [
-        "buy shoes online",
+
+// ASCII animation frames
+const frames = [
+    `
+   _____  _____   _____   _____  _      _____ 
+  / ____||  __ \\ / ____| / ____|| |    |  ___|
+ | |  __ | |  | | |  __ | |  __ | |    | |__  
+ | | |_ || |  | | | |_ || | |_ || |    |  __| 
+ | |__| || |__| | |__| || |__| || |____| |___ 
+  \\_____||_____/ \\_____| \\_____||______|_____|`,
+    // ... (rest of your frames)
+    
+            `
+   _____  _____   _____   _____  _    /\\_____ 
+  / ____||  __ \\ / ____| / ____|| |  / |  ___|
+ | |  __ | |  | | |  __ | |  __ | |//  | |__  
+ | | |_ || |  | | | |_ || | |_ || |/   |  __| 
+ | |__| || |__| | |__| || |__| || /\\__/| |___ 
+  \\_____||_____/ \\_____| \\_____||/    \\|_____|`,
+
+            `
+   ___/_  /_/__   _____   ___/_  _    /\\_____ 
+  / |__||  /_ \\ / ____| / ____|| |  / |  ___|
+ | |  __ |//  | | |/__ | |  __ |_|//  | |__  
+ | | |_ ||/|  | | | |_ || | |_ || |/   |  __| 
+ | |__| || |__| | |__| || |/_| || /\\__/| |___ 
+  \\_____||//_/_/ \\_____| \\/__/_||/    \\|_____|`,
+
+            `
+   __/\_  /_/__   __/\_   ___/_  _    /\__/\_ 
+  / |__||  /_ \ / ____| / |__|| |  / |  ___|
+ | |  __ |//  | | |/_/ | |  __ |_|//  | |__  
+ | | |_ ||/|  | | | |_ || | |_ || |/   |  __| 
+ | |__| || |__| | |__| || |/_| || /\__/| |___ 
+  \_____||//_/_/ \_____| \/__/_||/    \|_____|`,
+
+            `
+   #@$%^  &*($@   ^%$#@   @#$%^  $    *&^%$# 
+  @ #$%^ &* @# $ @ #$%^ & #$%^ @ #  @ #$%^ @ 
+ # @ #$% &* @ # @ # @$%^ @ #$%^ @ #@@ # @$%  
+ @ # @$% &@ # @ # @ #$% @@ # @$ @@ #@   # @$  
+ # @ #$& @@ #$@ # @ #$@ @@ #@$# @@ @#$%@# @$ 
+  $#@%^& @#$%^@ $#@%^& $#@%^& @#$%^& @#$%^@`,
+
+            `
+   !@#$%  ^&*()   @#$%^   %^&*(  *    ()&^% 
+  ! @#$% ^& !@ # ! @#$% ^ @#$% ! @  ! @#$% ! 
+ @ ! @#$ %^ ! @ ! @ !#$% ! @#$% ! @!! @ !#$  
+ ! @ !#$ %! @ ! @ ! @#$ !! @ !# !! @!   @ !#  
+ @ ! @#% !! @#! @ ! @#! !! @!#@ !! !@#$!@ !# 
+  #@!$%^ !@#$%! #@!$%^ #@!$%^ !@#$%^ !@#$%!`,
+
+            `
+   _____  _____   _____   _____  _      _____ 
+  / ____||  __ \\ / ____| / ____|| |    |  ___|
+ | |  __ | |  | | |  __ | |  __ | |    | |__  
+ | | |_ || |  | | | |_ || | |_ || |    |  __| 
+ | |__| || |__| | |__| || |__| || |____| |___ 
+  \\_____||_____/ \\_____| \\_____||______|_____|`
+        
+];
+
+// Default accounts data
+const defaultAccounts = [
+    // Group 1
+    {group: 1, id: 'KZ1', google: true, ads: false},
+    {group: 1, id: 'DK2', google: false, ads: false},
+    {group: 1, id: 'CA3', google: true, ads: false},
+    {group: 1, id: 'NL4', google: true, ads: false},
+    {group: 1, id: 'RS5', google: true, ads: false},
+    // Group 2
+    {group: 2, id: 'LT6', google: true, ads: false},
+    {group: 2, id: 'AU7', google: false, ads: false},
+    {group: 2, id: 'CA8', google: false, ads: false},
+    {group: 2, id: 'BY9', google: false, ads: false},
+    {group: 2, id: 'AU10', google: true, ads: false},
+    // Group 3
+    {group: 3, id: 'IT11', google: false, ads: false},
+    {group: 3, id: 'EE12', google: false, ads: false},
+    {group: 3, id: 'AM13', google: true, ads: false},
+    {group: 3, id: 'NO14', google: false, ads: false},
+    {group: 3, id: 'SL15', google: false, ads: false},
+    // Group 4
+    {group: 4, id: 'RO16', google: true, ads: false},
+    {group: 4, id: 'BE17', google: true, ads: false},
+    {group: 4, id: 'UZ18', google: false, ads: false},
+    {group: 4, id: 'NO19', google: true, ads: false},
+    {group: 4, id: 'RO20', google: true, ads: false},
+    // Group 5
+    {group: 5, id: 'SL21', google: false, ads: false},
+    {group: 5, id: 'EE22', google: true, ads: false},
+    {group: 5, id: 'UA23', google: false, ads: false},
+    {group: 5, id: 'AM24', google: true, ads: false},
+    {group: 5, id: 'UZ25', google: true, ads: false},
+    // Group 6
+    {group: 6, id: 'MX26', google: false, ads: false},
+    {group: 6, id: 'DE27', google: true, ads: false},
+    {group: 6, id: 'FL28', google: true, ads: false},
+    {group: 6, id: 'SK29', google: false, ads: false},
+    {group: 6, id: 'ES30', google: false, ads: false},
+    // Group 7
+    {group: 7, id: 'TJ31', google: false, ads: false},
+    {group: 7, id: 'LT32', google: false, ads: false},
+    {group: 7, id: 'SK33', google: false, ads: false},
+    {group: 7, id: 'GR34', google: false, ads: false},
+    {group: 7, id: 'IN35', google: false, ads: false},
+    // Group 8
+    {group: 8, id: 'UK36', google: false, ads: false},
+    {group: 8, id: 'UK37', google: false, ads: false},
+    {group: 8, id: 'GR38', google: false, ads: false},
+    {group: 8, id: 'MD39', google: false, ads: false},
+    {group: 8, id: 'LV40', google: true, ads: false},
+    // Group 9
+    {group: 9, id: 'CA41', google: false, ads: false},
+    {group: 9, id: 'FR42', google: false, ads: false},
+    {group: 9, id: 'IT43', google: false, ads: false},
+    {group: 9, id: 'NL44', google: false, ads: false},
+    {group: 9, id: 'IT45', google: false, ads: false}
+];
+
+// Global variables
+let accounts = [];
+let isEditMode = false;
+let hasUnsavedChanges = false;
+const EDIT_CODE = 'abc123';
+
+// Animation functions
+let currentFrame = 0;
+function updateAnimation() {
+    const animationElement = document.getElementById('asciiAnimation');
+    if (animationElement) {
+        animationElement.textContent = frames[currentFrame];
+        currentFrame = (currentFrame + 1) % frames.length;
+    }
+}
+
+// Local storage functions
+function loadAccounts() {
+    const savedAccounts = localStorage.getItem('accounts');
+    if (savedAccounts) {
+        try {
+            accounts = JSON.parse(savedAccounts);
+        } catch (e) {
+            console.error('Error loading accounts:', e);
+            accounts = [...defaultAccounts];
+        }
+    } else {
+        accounts = [...defaultAccounts];
+    }
+}
+
+function saveAccounts() {
+    try {
+        localStorage.setItem('accounts', JSON.stringify(accounts));
+        hasUnsavedChanges = false;
+        updateSaveButton();
+        showStatusMessage('Changes saved successfully!', 'success');
+    } catch (e) {
+        console.error('Error saving accounts:', e);
+        showStatusMessage('Error saving changes!', 'error');
+    }
+}
+
+// UI update functions
+function showStatusMessage(message, type = 'success') {
+    const statusMessage = document.getElementById('statusMessage');
+    statusMessage.textContent = message;
+    statusMessage.className = `status-message ${type} show`;
+    setTimeout(() => {
+        statusMessage.classList.remove('show');
+    }, 2000);
+}
+
+function updateSaveButton() {
+    const saveButton = document.getElementById('saveButton');
+    if (saveButton) {
+        saveButton.disabled = !isEditMode || !hasUnsavedChanges;
+    }
+}
+
+function updateProgress(type) {
+    const completed = accounts.filter(a => type === 'google' ? a.google : a.ads).length;
+    const total = accounts.length;
+    const percentage = (completed / total) * 100;
+    
+    const countElement = document.getElementById(`${type}-count`);
+    const fillElement = document.getElementById(`${type}ProgressFill`);
+    
+    if (countElement) {
+        countElement.textContent = `${completed}/${total} accounts complete`;
+    }
+    if (fillElement) {
+        fillElement.style.width = `${percentage}%`;
+    }
+}
+
+function renderAccountsTable() {
+    const tbody = document.querySelector('#accountsTable tbody');
+    if (!tbody) return;
+
+    tbody.innerHTML = '';
+    let currentGroup = null;
+    
+    accounts.forEach(account => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${currentGroup !== account.group ? `Group ${account.group}` : ''}</td>
+            <td>${account.id}</td>
+            <td class="checkbox-cell">
+                <input type="checkbox" ${account.google ? 'checked' : ''} 
+                       ${!isEditMode ? 'disabled' : ''} 
+                       onchange="updateAccount('${account.id}', 'google', this.checked)">
+            </td>
+            <td class="checkbox-cell">
+                <input type="checkbox" ${account.ads ? 'checked' : ''} 
+                       ${!isEditMode ? 'disabled' : ''} 
+                       onchange="updateAccount('${account.id}', 'ads', this.checked)">
+            </td>
+        `;
+        tbody.appendChild(row);
+        currentGroup = account.group;
+    });
+}
+
+function updateAccount(id, type, value) {
+    const account = accounts.find(a => a.id === id);
+    if (account) {
+        account[type] = value;
+        hasUnsavedChanges = true;
+        updateProgress(type);
+        simulateTerminalOutput(id, type, value);
+        updateSaveButton();
+    }
+}
+
+function simulateTerminalOutput(id, type, completed) {
+    const terminal = document.getElementById(`${type}TerminalOutput`);
+    if (!terminal) return;
+
+    const line = document.createElement('div');
+    line.textContent = `${completed ? '✓' : '✗'} Account ${id}: ${type.toUpperCase()} ${completed ? 'completed' : 'unchecked'}`;
+    line.style.color = completed ? 'var(--main-green)' : 'var(--text-gray)';
+    terminal.appendChild(line);
+    terminal.scrollTop = terminal.scrollHeight;
+}
+
+// Random query functions
+const queries = [
+    "buy shoes online",
         "weather forecast",
         "best pizza near me",
         "how to fix a bike",
@@ -433,251 +718,81 @@ footer {
     "online learning benefits",
     "famous historical events",
     "best car brands of 2024",
-    "importance of mental health",
-    "how to make good coffee at home"
-    ];
-latest Marvel movies
-
-
-    // Function to add typos to queries
-    function addTypos(query) {
-        const typoProbability = 0.05; // 5%
-        if (Math.random() < typoProbability) {
-            const index = Math.floor(Math.random() * query.length);
-            return (
-                query.slice(0, index) +
-                String.fromCharCode(query.charCodeAt(index) + 1) +
-                query.slice(index + 1)
-            );
-        }
-        return query;
-    }
-
-    // Generate 200 queries with typos
-    const randomQueries = Array(200)
-        .fill(null)
-        .map(() => addTypos(queries[Math.floor(Math.random() * queries.length)]));
-
-    // Function to display a random query
-    function showRandomQuery() {
-        const randomQuery = randomQueries[Math.floor(Math.random() * randomQueries.length)];
-        document.getElementById("randomQueryDisplay").textContent = randomQuery;
-    }
-</script>
-<script>
-        const frames = [
-            `
-   _____  _____   _____   _____  _      _____ 
-  / ____||  __ \\ / ____| / ____|| |    |  ___|
- | |  __ | |  | | |  __ | |  __ | |    | |__  
- | | |_ || |  | | | |_ || | |_ || |    |  __| 
- | |__| || |__| | |__| || |__| || |____| |___ 
-  \\_____||_____/ \\_____| \\_____||______|_____|`,
-
-            `
-   _____  _____   _____   _____  _    /\\_____ 
-  / ____||  __ \\ / ____| / ____|| |  / |  ___|
- | |  __ | |  | | |  __ | |  __ | |//  | |__  
- | | |_ || |  | | | |_ || | |_ || |/   |  __| 
- | |__| || |__| | |__| || |__| || /\\__/| |___ 
-  \\_____||_____/ \\_____| \\_____||/    \\|_____|`,
-
-            `
-   ___/_  /_/__   _____   ___/_  _    /\\_____ 
-  / |__||  /_ \\ / ____| / ____|| |  / |  ___|
- | |  __ |//  | | |/__ | |  __ |_|//  | |__  
- | | |_ ||/|  | | | |_ || | |_ || |/   |  __| 
- | |__| || |__| | |__| || |/_| || /\\__/| |___ 
-  \\_____||//_/_/ \\_____| \\/__/_||/    \\|_____|`,
-
-            `
-   __/\_  /_/__   __/\_   ___/_  _    /\__/\_ 
-  / |__||  /_ \ / ____| / |__|| |  / |  ___|
- | |  __ |//  | | |/_/ | |  __ |_|//  | |__  
- | | |_ ||/|  | | | |_ || | |_ || |/   |  __| 
- | |__| || |__| | |__| || |/_| || /\__/| |___ 
-  \_____||//_/_/ \_____| \/__/_||/    \|_____|`,
-
-            `
-   #@$%^  &*($@   ^%$#@   @#$%^  $    *&^%$# 
-  @ #$%^ &* @# $ @ #$%^ & #$%^ @ #  @ #$%^ @ 
- # @ #$% &* @ # @ # @$%^ @ #$%^ @ #@@ # @$%  
- @ # @$% &@ # @ # @ #$% @@ # @$ @@ #@   # @$  
- # @ #$& @@ #$@ # @ #$@ @@ #@$# @@ @#$%@# @$ 
-  $#@%^& @#$%^@ $#@%^& $#@%^& @#$%^& @#$%^@`,
-
-            `
-   !@#$%  ^&*()   @#$%^   %^&*(  *    ()&^% 
-  ! @#$% ^& !@ # ! @#$% ^ @#$% ! @  ! @#$% ! 
- @ ! @#$ %^ ! @ ! @ !#$% ! @#$% ! @!! @ !#$  
- ! @ !#$ %! @ ! @ ! @#$ !! @ !# !! @!   @ !#  
- @ ! @#% !! @#! @ ! @#! !! @!#@ !! !@#$!@ !# 
-  #@!$%^ !@#$%! #@!$%^ #@!$%^ !@#$%^ !@#$%!`,
-
-            `
-   _____  _____   _____   _____  _      _____ 
-  / ____||  __ \\ / ____| / ____|| |    |  ___|
- | |  __ | |  | | |  __ | |  __ | |    | |__  
- | | |_ || |  | | | |_ || | |_ || |    |  __| 
- | |__| || |__| | |__| || |__| || |____| |___ 
-  \\_____||_____/ \\_____| \\_____||______|_____|`
-        ];
-
-        let currentFrame = 0;
-        const animationElement = document.getElementById('asciiAnimation');
-
-        function updateAnimation() {
-            animationElement.textContent = frames[currentFrame];
-            currentFrame = (currentFrame + 1) % frames.length;
-        }
-
-        // Start the animation when the page loads
-        document.addEventListener('DOMContentLoaded', () => {
-            updateAnimation(); // Show first frame immediately
-            setInterval(updateAnimation, 300); // Changed to 300ms for faster glitch effect
-        });
-    </script>
-
-<script>
-
-
-
-    
-const accounts = [
-    // Group 1
-    {group: 1, id: 'KZ1', google: true, ads: false},
-    {group: 1, id: 'DK2', google: false, ads: false},
-    {group: 1, id: 'CA3', google: true, ads: false},
-    {group: 1, id: 'NL4', google: true, ads: false},
-    {group: 1, id: 'RS5', google: true, ads: false},
-    // Group 2
-    {group: 2, id: 'LT6', google: true, ads: false},
-    {group: 2, id: 'AU7', google: false, ads: false},
-    {group: 2, id: 'CA8', google: false, ads: false},
-    {group: 2, id: 'BY9', google: false, ads: false},
-    {group: 2, id: 'AU10', google: true, ads: false},
-    // Group 3
-    {group: 3, id: 'IT11', google: false, ads: false},
-    {group: 3, id: 'EE12', google: false, ads: false},
-    {group: 3, id: 'AM13', google: true, ads: false},
-    {group: 3, id: 'NO14', google: false, ads: false},
-    {group: 3, id: 'SL15', google: false, ads: false},
-    // Group 4
-    {group: 4, id: 'RO16', google: true, ads: false},
-    {group: 4, id: 'BE17', google: true, ads: false},
-    {group: 4, id: 'UZ18', google: false, ads: false},
-    {group: 4, id: 'NO19', google: true, ads: false},
-    {group: 4, id: 'RO20', google: true, ads: false},
-    // Group 5
-    {group: 5, id: 'SL21', google: false, ads: false},
-    {group: 5, id: 'EE22', google: true, ads: false},
-    {group: 5, id: 'UA23', google: false, ads: false},
-    {group: 5, id: 'AM24', google: true, ads: false},
-    {group: 5, id: 'UZ25', google: true, ads: false},
-    // Group 6
-    {group: 6, id: 'MX26', google: false, ads: false},
-    {group: 6, id: 'DE27', google: true, ads: false},
-    {group: 6, id: 'FL28', google: true, ads: false},
-    {group: 6, id: 'SK29', google: false, ads: false},
-    {group: 6, id: 'ES30', google: false, ads: false},
-    // Group 7
-    {group: 7, id: 'TJ31', google: false, ads: false},
-    {group: 7, id: 'LT32', google: false, ads: false},
-    {group: 7, id: 'SK33', google: false, ads: false},
-    {group: 7, id: 'GR34', google: false, ads: false},
-    {group: 7, id: 'IN35', google: false, ads: false},
-    // Group 8
-    {group: 8, id: 'UK36', google: false, ads: false},
-    {group: 8, id: 'UK37', google: false, ads: false},
-    {group: 8, id: 'GR38', google: false, ads: false},
-    {group: 8, id: 'MD39', google: false, ads: false},
-    {group: 8, id: 'LV40', google: true, ads: false},
-    // Group 9
-    {group: 9, id: 'CA41', google: false, ads: false},
-    {group: 9, id: 'FR42', google: false, ads: false},
-    {group: 9, id: 'IT43', google: false, ads: false},
-    {group: 9, id: 'NL44', google: false, ads: false},
-    {group: 9, id: 'IT45', google: false, ads: false}
+    "importance of mental health"
 ];
 
-let isEditMode = false;
-const EDIT_CODE = 'abc123';
-
-function updateProgress(type) {
-    const completed = accounts.filter(a => type === 'google' ? a.google : a.ads).length;
-    const total = accounts.length;
-    const percentage = (completed / total) * 100;
-    
-    const countElement = document.getElementById(`${type}-count`);
-    const fillElement = document.getElementById(`${type}ProgressFill`);
-    
-    countElement.textContent = `${completed}/${total} accounts complete`;
-    fillElement.style.width = `${percentage}%`;
+function addTypos(query) {
+    const typoProbability = 0.05;
+    if (Math.random() < typoProbability) {
+        const index = Math.floor(Math.random() * query.length);
+        return (
+            query.slice(0, index) +
+            String.fromCharCode(query.charCodeAt(index) + 1) +
+            query.slice(index + 1)
+        );
+    }
+    return query;
 }
 
-function renderAccountsTable() {
-    const tbody = document.querySelector('#accountsTable tbody');
-    tbody.innerHTML = '';
-    
-    let currentGroup = null;
-    
-    accounts.forEach(account => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${currentGroup !== account.group ? `Group ${account.group}` : ''}</td>
-            <td>${account.id}</td>
-            <td class="checkbox-cell">
-                <input type="checkbox" ${account.google ? 'checked' : ''} 
-                       ${!isEditMode ? 'disabled' : ''} 
-                       onchange="updateAccount('${account.id}', 'google', this.checked)">
-            </td>
-            <td class="checkbox-cell">
-                <input type="checkbox" ${account.ads ? 'checked' : ''} 
-                       ${!isEditMode ? 'disabled' : ''} 
-                       onchange="updateAccount('${account.id}', 'ads', this.checked)">
-            </td>
-        `;
-        tbody.appendChild(row);
-        currentGroup = account.group;
-    });
-}
+const randomQueries = Array(200)
+    .fill(null)
+    .map(() => addTypos(queries[Math.floor(Math.random() * queries.length)]));
 
-function updateAccount(id, type, value) {
-    const account = accounts.find(a => a.id === id);
-    if (account) {
-        account[type] = value;
-        updateProgress(type);
-        simulateTerminalOutput(id, type, value);
+function showRandomQuery() {
+    const randomQuery = randomQueries[Math.floor(Math.random() * randomQueries.length)];
+    const displayElement = document.getElementById("randomQueryDisplay");
+    if (displayElement) {
+        displayElement.textContent = randomQuery;
     }
 }
 
-function simulateTerminalOutput(id, type, completed) {
-    const terminal = document.getElementById(`${type}TerminalOutput`);
-    const line = document.createElement('div');
-    line.textContent = `${completed ? '✓' : '✗'} Account ${id}: ${type.toUpperCase()} ${completed ? 'completed' : 'unchecked'}`;
-    line.style.color = completed ? 'var(--main-green)' : 'var(--text-gray)';
-    terminal.appendChild(line);
-    terminal.scrollTop = terminal.scrollHeight;
-}
-
-document.getElementById('editButton').addEventListener('click', () => {
-    const code = prompt('Enter edit code:');
-    if (code === EDIT_CODE) {
-        isEditMode = !isEditMode;
-        document.getElementById('logArea').disabled = !isEditMode;
-        renderAccountsTable();
-        alert('Edit mode ' + (isEditMode ? 'enabled' : 'disabled'));
-    } else {
-        alert('Invalid code');
-    }
-});
-
-// Initialize
+// Event listeners
 document.addEventListener('DOMContentLoaded', () => {
+    loadAccounts();
     renderAccountsTable();
     updateProgress('google');
     updateProgress('ads');
+    updateSaveButton();
+    
+    // Start animation
+    updateAnimation();
+    setInterval(updateAnimation, 300);
+
+    // Add event listeners
+    const editButton = document.getElementById('editButton');
+    if (editButton) {
+        editButton.addEventListener('click', () => {
+            const code = prompt('Enter edit code:');
+            if (code === EDIT_CODE) {
+                isEditMode = !isEditMode;
+                const logArea = document.getElementById('logArea');
+                if (logArea) {
+                    logArea.disabled = !isEditMode;
+                }
+                renderAccountsTable();
+                updateSaveButton();
+                showStatusMessage(`Edit mode ${isEditMode ? 'enabled' : 'disabled'}`);
+            } else {
+                showStatusMessage('Invalid code', 'error');
+            }
+        });
+    }
+
+    const saveButton = document.getElementById('saveButton');
+    if (saveButton) {
+        saveButton.addEventListener('click', saveAccounts);
+    }
 });
+
+// Warning for unsaved changes
+window.addEventListener('beforeunload', (e) => {
+    if (hasUnsavedChanges) {
+        e.preventDefault();
+        e.returnValue = '';
+    }
+});
+
+
 </script>
 </body>
 </html>
